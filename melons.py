@@ -1,5 +1,8 @@
 """Classes for melon orders."""
 
+import random
+import datetime
+
 
 class AbstractMelonOrder(object):
     """Global melon orders."""
@@ -16,10 +19,10 @@ class AbstractMelonOrder(object):
     def get_total(self):
         """Calculate price, including tax."""
 
+        base_price = self.get_base_price()
+
         if self.species.lower() == "christmas melon":
-            base_price = 5 * 1.5
-        else:
-            base_price = 5
+            base_price = base_price * 1.5
 
         if self.order_type.lower() == "international" and self.qty < 10:
             flat_fee = 3
@@ -34,6 +37,19 @@ class AbstractMelonOrder(object):
         """Record the fact than an order has been shipped."""
 
         self.shipped = True
+
+    def get_base_price(self):
+        """ Get a random base price between 5 and 9."""
+
+        week_day = datetime.datetime.today().weekday()
+
+        day_hour = datetime.datetime.now().hour
+
+        if week_day in range(0, 5) and day_hour in range(8, 12):
+            base_price = random.randint(5, 9) + 4
+        else:
+            base_price = random.randint(5, 9)
+        return base_price
 
 
 class DomesticMelonOrder(AbstractMelonOrder):
